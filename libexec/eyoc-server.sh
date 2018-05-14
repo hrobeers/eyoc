@@ -2,9 +2,9 @@
 
 port=$1
 
-chat_log=$(mktemp /tmp/chat.log.XXXXXXXXX)
-tail -f $chat_log &
+eyoc_log=$(mktemp /tmp/eyoc.log.XXXXXXXXX)
+tail -f $eyoc_log &
 log_pid=$!
-socat -ddd TCP-LISTEN:$port,fork,reuseaddr SYSTEM:"cat >> $chat_log | tail -f $chat_log"
+socat -ddd TCP-LISTEN:$port,fork,reuseaddr SYSTEM:"cat >> $eyoc_log | tail -f $eyoc_log"
 kill $log_pid
-rm $chat_log
+rm $eyoc_log

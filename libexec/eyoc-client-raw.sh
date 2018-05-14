@@ -27,6 +27,8 @@ read -d '' banner <<- EOF
     This program comes with ABSOLUTELY NO WARRANTY.
     This is free software, and you are welcome to redistribute it
     under under the terms of the GNU General Public License v3.
+
+    To exit this application press Ctrl+C twice.
 #####################################################################
 EOF
 

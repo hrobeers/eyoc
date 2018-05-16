@@ -16,6 +16,22 @@ This toolbox aims at providing a set of utilities allowing to quickly assemble a
 
 However, this toolbox does not provide any guarantees, including but not limited to, security and attack resistance.
 This toolbox allows the user to set up a simple encrypted chat box in minutes including a full read of the used source code.
+It should be handled as an educational work that can serve as the basis for assembling a safe and securely operated chatbox.
+
+
+Currently Known Limitations
+-----------------
+
+This toolbox is aimed at being simple and transparent to it's users and operators.
+Therefore, limitations in functionality and security are unavoidable, and this toolbox should be handled as an educational work that can serve as the basis for assembling a safe and securely operated chatbox.
+
+The limitations include but are not limited to the ones listed below.
+- Denial of service attacks on the eyoc-server are trivial.
+- Identity verification is currently not implemented, impersonation is trivial.
+- Encryption key distribution and management is left to the user.
+- Code injection vulnerabilities are likely to exist.
+
+Most of the above listed limitations can be overcome by plugging extra tools into the client or server's pipeline.
 
 
 Quickstart

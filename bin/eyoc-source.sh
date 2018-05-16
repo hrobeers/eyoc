@@ -24,5 +24,11 @@ key_file() {
   echo "eyoc@$host:$port"
 }
 
-EYOC_LIBEXEC="$(dirname $(abs_dirname "$0"))/libexec"
+EYOC_ROOT="$(dirname $(abs_dirname "$0"))"
+EYOC_LIBEXEC="$EYOC_ROOT"/libexec/eyoc
 export PATH="$EYOC_LIBEXEC:$PATH"
+
+if [ "$1" == "location" ]
+then
+  echo "$EYOC_ROOT"
+fi

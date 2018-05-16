@@ -37,19 +37,24 @@ Most of the above listed limitations can be overcome by plugging extra tools int
 Quickstart
 ----------
 
+Install the eyoc tools or add the bin folder to your path.
+```bash
+sudo ./install.sh /usr/local
+```
+
 Start the server
 ```bash
-./bin/eyoc-server 5555
+eyoc-server 5555
 ```
 
 Connect a client (not encrypted)
 ```bash
-./bin/eyoc-client-raw localhost 5555
+eyoc-client-raw localhost 5555
 ```
 
 Connect a second client with different user name (not encrypted)
 ```bash
-USER="different user" ./bin/eyoc-client-raw localhost 5555
+USER="different user" eyoc-client-raw localhost 5555
 ```
 
 

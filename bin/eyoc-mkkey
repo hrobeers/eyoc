@@ -18,8 +18,4 @@
 DIR=$( dirname "${BASH_SOURCE[0]}" )
 source "$DIR/eyoc-source.sh"
 
-host=$1
-port=$2
-keyfile=$(key_file $host $port)
-
-eyoc-client-raw.sh $host $port "enc-aes-256.sh ~/.keys/$keyfile | one-line.sh" "dec-aes-256.sh ~/.keys/$keyfile"
+mkkey.sh $(key_file $1 $2)

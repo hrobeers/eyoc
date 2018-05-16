@@ -18,5 +18,11 @@ abs_dirname() {
   cd "$cwd"
 }
 
+key_file() {
+  local host="$1"
+  local port="$2"
+  echo "eyoc@$host:$port"
+}
+
 EYOC_LIBEXEC="$(dirname $(abs_dirname "$0"))/libexec"
 export PATH="$EYOC_LIBEXEC:$PATH"

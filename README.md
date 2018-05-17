@@ -75,4 +75,43 @@ Dependencies
 Tutorial
 --------
 
-Coming soon ...
+This tutorial will quickly guide you through the setup and data flow of the eyoc system.
+eyoc is an acronym for "Encrypt Your Own Chat", not for "run an encrypted chat".
+Therefore it is important that the operator en preferably it's users understand it's data flow.
+
+### Installation
+
+Run the install script providing the installation prefix.
+```bash
+sudo ./install.sh /usr/local
+```
+
+Or add the bin folder to your path.
+```bash
+export PATH="$(pwd)/bin:$PATH"
+```
+
+You can later uninstall eyoc using the uninstall script.
+```bash
+sudo ./uninstall.sh
+```
+The uninstall script figures out where eyoc is installed and removes it from that location.
+
+### Running the server
+
+The server code is roughly equivalent to running the single line of code illustrated below.
+Some extra lines are added to clean up the log file after exit and to print out the chat messages when they come in.
+```bash
+PORT=5555; socat -ddd TCP-LISTEN:$PORT,fork,reuseaddr SYSTEM:"cat >> /tmp/eyoc_log | tail -f /tmp/eyoc_log"
+```
+
+Dissecting the server code:
+- `TCP-LISTEN:$PORT,fork,reuseaddr`: The server listens to multiple client connections over TCP.
+- `cat >> /tmp/eyoc_log`: Every client connection appends all received messages to the same file on disk.
+- `tail -f /tmp/eyoc_log`: Every client connection watches the same file on disk and send them to there connected client when new messages are added.
+
+Note that the tail command also sends the last couple of messages when a connection is established, providing a newly connected client the last lines of the chat to catch up. Check out the tail command to find out how you can increase or decrease the amount of history sent upon connection.
+
+Also note that the above server does not authenticate clients and that anyone can read and write messages to it.
+Encryption of the messages would make sure that only recipients knowing the encryption key are able to decode the messages.
+A message authentication scheme can be introduced server side in order to ignore messages sent by malicious entities.

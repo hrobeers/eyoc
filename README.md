@@ -110,6 +110,16 @@ Dissecting the server code:
 - `cat >> /tmp/eyoc_log`: Every client connection appends all received messages to the same file on disk.
 - `tail -f /tmp/eyoc_log`: Every client connection watches the same file on disk and send them to there connected client when new messages are added.
 
+See if you can figure out the server code in libexec/eyoc/eyoc-server.sh and start a server instance (the single line server above should also work).
+```bash
+eyoc-server 5555
+```
+
+Use netcat as a simple and a bit awkward chat client to test out the server command, use multiple instances to have a chat.
+```bash
+nc localhost 5555
+```
+
 Note that the tail command also sends the last couple of messages when a connection is established, providing a newly connected client the last lines of the chat to catch up. Check out the tail command to find out how you can increase or decrease the amount of history sent upon connection.
 
 Also note that the above server does not authenticate clients and that anyone can read and write messages to it.

@@ -26,7 +26,7 @@ This toolbox is aimed at being simple and transparent to it's users and operator
 Therefore, limitations in functionality and security are unavoidable, and this toolbox should be handled as an educational work that can serve as the basis for assembling a safe and securely operated chatbox.
 
 The limitations include but are not limited to the ones listed below.
-- Denial of service attacks on the eyoc-server are trivial.
+- Denial of service attacks on the `eyoc-server` are trivial.
 - Identity verification is currently not implemented, impersonation is trivial.
 - Encryption key distribution and management is left to the user.
 - Code injection vulnerabilities are likely to exist.
@@ -110,7 +110,7 @@ Dissecting the server code:
 - `cat >> /tmp/eyoc_log`: Every client connection appends all received messages to the same file on disk.
 - `tail -f /tmp/eyoc_log`: Every client connection watches the same file on disk and send them to there connected client when new messages are added.
 
-See if you can figure out the server code in libexec/eyoc/eyoc-server.sh and start a server instance (the single line server above should also work).
+See if you can figure out the server code in [libexec/eyoc/eyoc-server.sh](./libexec/eyoc/eyoc-server.sh) and start a server instance (the single line server above should also work).
 ```bash
 eyoc-server 5555
 ```
@@ -138,8 +138,8 @@ cat | while read line; do echo $line | base64 -w0; printf "\\n"; done | nc local
 ```
 
 The line above is quite complex for creating a very limited chat application.
-Therefore, the eyoc-client-raw command is created to remove some of the boilerplate and provide a convenient tmux based interface.
-Even though understanding the line above does help you understand the message flow of the application, you can simply add base64 encoding to eyoc-client-raw using the command below.
+Therefore, the `eyoc-client-raw` command is created to remove some of the boilerplate and provide a convenient tmux based interface.
+Even though understanding the line above does help you understand the message flow of the application, you can simply add base64 encoding to `eyoc-client-raw` using the command below.
 ```bash
 eyoc-client-raw localhost 5555 base64 "base64 -d"
 ```
@@ -154,3 +154,29 @@ eyoc-client-raw localhost 5555
 When adding a custom encoding scheme to `eyoc-client-raw`, one should be aware of the line based behaviour of `eyoc-client-raw` in removing all LF characters from it's messages and appending a single LF to the end of the message.
 This behaviour ensures all messages are encoded as a single line, it is therefore advised to use a text compatible encoding like base64 in your encoding scheme.
 For more information check out the source code in `libexec/eyoc/eyoc-client-raw.sh`.
+
+
+### Message encryption (end-to-end)
+
+End-to-end encryption with eyoc is similar to encoding, as explained in the previous section.
+However, encryption involves managing encryption keys, which is a discipline on it's own.
+`eyoc-client` implements a simple shared key encryption scheme, by injecting an openssl command as encoding and decoding command into `eyoc-client-raw`. It is assumed the peers to be able to securely share a symmetrical encryption key.
+
+`eyoc-client` searches for a key in `~/.keys/` based on the pattern: `eyoc@$host:$port`.
+The host can be a hostname or ip address depending on how the users connect to the server, note that `eyoc-client` assumes that all users connect in the same way.
+
+Create a key using the command below.
+```bash
+eyoc-mkkey <ip-or-hostname> 5555
+```
+
+Now distribute the keyfile `~/.keys/eyoc@<ip-or-hostname>:5555` to your peers and instruct them to put it under `~/.keys/`.
+You and your peers should then be able to connect and chat encrypted using the following command.
+```bash
+eyoc-client <ip-or-hostname> 5555
+```
+
+Make sure to check out the files listed below for in depth understanding of the encryption commands and how you can roll your own.
+- [bin/eyoc-client](./bin/eyoc-client)
+- [libexec/eyoc/enc-aes-256.sh](./libexec/eyoc/enc-aes-256.sh)
+- [libexec/eyoc/dec-aes-256.sh](./libexec/eyoc/dec-aes-256.sh)

@@ -125,3 +125,32 @@ Note that the tail command also sends the last couple of messages when a connect
 Also note that the above server does not authenticate clients and that anyone can read and write messages to it.
 Encryption of the messages would make sure that only recipients knowing the encryption key are able to decode the messages.
 A message authentication scheme can be introduced server side in order to ignore messages sent by malicious entities.
+
+
+### Message encoding (end-to-end)
+
+In order to add some end-to-end encoding to the messages, the server code does not need any modification.
+The server should not be able to decode the messages.
+
+Make sure the server is running `eyoc-server 5555` and just add some base64 encoding and decoding (not encryption!) to our client pipeline as follows.
+```bash
+cat | while read line; do echo $line | base64 -w0; printf "\\n"; done | nc localhost 5555 | while read line; do echo $line | base64 -d; done
+```
+
+The line above is quite complex for creating a very limited chat application.
+Therefore, the eyoc-client-raw command is created to remove some of the boilerplate and provide a convenient tmux based interface.
+Even though understanding the line above does help you understand the message flow of the application, you can simply add base64 encoding to eyoc-client-raw using the command below.
+```bash
+eyoc-client-raw localhost 5555 base64 "base64 -d"
+```
+Where "base64" is the encoding command, encoding the message in base64 before sending and "base64 -d" is the decoding command, decoding the received messages before displaying.
+
+Note that `eyoc-client-raw` defaults to `cat` for both encoding and decoding when not provided, therefore both lines below equivalently send messages in plain text to the server.
+```bash
+eyoc-client-raw localhost 5555 cat cat
+eyoc-client-raw localhost 5555
+```
+
+When adding a custom encoding scheme to `eyoc-client-raw`, one should be aware of the line based behaviour of `eyoc-client-raw` in removing all LF characters from it's messages and appending a single LF to the end of the message.
+This behaviour ensures all messages are encoded as a single line, it is therefore advised to use a text compatible encoding like base64 in your encoding scheme.
+For more information check out the source code in `libexec/eyoc/eyoc-client-raw.sh`.

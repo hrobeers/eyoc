@@ -18,4 +18,4 @@
 DIR=$( dirname "${BASH_SOURCE[0]}" )
 source "$DIR/eyoc-source.sh"
 
-eyoc-server.sh $@
+eyoc-server.sh "$@"

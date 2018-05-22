@@ -36,7 +36,7 @@ eyoc_fifo_in=$(mktemp /tmp/eyoc.fifo.XXXXXXXXX --dry-run)
 mkfifo $eyoc_fifo_in
 
 send_cmd="while read line; do echo \"<$username> \$line\" 1>&2; clear; done 2> $eyoc_fifo_in"
-recv_cmd="cat $eyoc_fifo_in | foreach-line.sh \"$encode\" | nc $host $port | foreach-line.sh \"$decode\""
+recv_cmd="cat $eyoc_fifo_in | foreach-line.sh \"$encode  | one-line.sh\" | nc $host $port | foreach-line.sh \"$decode\""
 
 tmux \
     new-session "echo \"$banner\" && $recv_cmd" \; \

@@ -18,4 +18,4 @@
 DIR=$( dirname "${BASH_SOURCE[0]}" )
 source "$DIR/eyoc-source.sh"
 
-mkkey.sh $(key_file $1 $2)
+exec mkkey.sh $(key_file $1 $2)

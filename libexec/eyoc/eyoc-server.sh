@@ -17,9 +17,20 @@
 
 port=$1
 
+# Create temporary log file
 eyoc_log=$(mktemp /tmp/eyoc.log.XXXXXXXXX)
 tail -f $eyoc_log &
-log_pid=$!
-socat -ddd TCP-LISTEN:$port,fork,reuseaddr SYSTEM:"cat >> $eyoc_log | tail -f $eyoc_log"
-kill $log_pid
-rm $eyoc_log
+
+# Define cleanup procedure
+cleanup() {
+  rm $eyoc_log
+  kill 0
+}
+trap "exit" SIGTERM SIGINT
+trap cleanup EXIT
+
+# Run the server
+socat -ddd TCP-LISTEN:$port,fork,reuseaddr SYSTEM:"cat >> $eyoc_log | tail -f $eyoc_log" &
+
+# Loop unit terminated
+ while :; do sleep 1; done

@@ -32,15 +32,23 @@ read -d '' banner <<- EOF
 #####################################################################
 EOF
 
+# Create named pipes for communication
 eyoc_fifo_in=$(mktemp /tmp/eyoc.fifo.XXXXXXXXX --dry-run)
 mkfifo $eyoc_fifo_in
 
+# Define cleanup procedure
+cleanup() {
+  rm $eyoc_fifo_in
+}
+trap cleanup EXIT
+
+# Prepare the commands attached to send and receive panes
 send_cmd="while read line; do echo \"<$username> \$line\" 1>&2; clear; done 2> $eyoc_fifo_in"
 recv_cmd="cat $eyoc_fifo_in | foreach-line.sh \"$encode  | one-line.sh\" | nc $host $port | foreach-line.sh \"$decode\""
 
+# Run tmux with commands attached
 tmux \
     new-session "echo \"$banner\" && $recv_cmd" \; \
     split-window "$send_cmd" \; \
     resize-pane -y 2
 
-rm $eyoc_fifo_in

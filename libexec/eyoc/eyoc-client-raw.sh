@@ -35,7 +35,7 @@ read -d '' banner <<- EOF
 EOF
 
 # Create named pipes for communication
-eyoc_fifo_in=$(mktemp /tmp/eyoc.fifo.XXXXXXXXX --dry-run)
+eyoc_fifo_in=$(mktemp -t eyoc.fifo.XXXXXXXXX --dry-run)
 mkfifo $eyoc_fifo_in
 
 # Define cleanup procedure

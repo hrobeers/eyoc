@@ -21,7 +21,7 @@ set -u
 port=$1
 
 # Create temporary log file
-eyoc_log=$(mktemp /tmp/eyoc.log.XXXXXXXXX)
+eyoc_log=$(mktemp -t eyoc.log.XXXXXXXXX)
 tail -f $eyoc_log &
 
 # Define cleanup procedure

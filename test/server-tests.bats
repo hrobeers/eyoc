@@ -9,7 +9,7 @@ PORT=5000
     server_pid=$!
 
     # give server time to start listening
-    sleep 0.1
+    sleep 0.3
 
     # send echo message and wait for response
     MSG="echo this message"

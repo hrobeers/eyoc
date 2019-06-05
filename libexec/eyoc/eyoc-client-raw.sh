@@ -21,7 +21,13 @@ host=$1
 port=$2
 encode=${3:-cat}
 decode=${4:-cat}
-username=${USER:-$(mktemp anon.XXXX --dry-run)}
+
+username=$(echo $USER)
+[ -n "$username" ] || {
+    echo "Enter a username:"
+    read username
+}
+username=${username:-$(mktemp anon.XXXX --dry-run)}
 
 read -d '' banner <<- EOF
 #####################################################################
